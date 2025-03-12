@@ -22,38 +22,110 @@ ng generate component component-name
 
 For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
-```bash
-ng generate --help
+# Angular Todo App with Performance Optimizations
+
+A high-performance Angular application demonstrating advanced optimization techniques for modern web applications. This project includes a Todo management system and an image gallery with best-in-class performance practices.
+
+## Table of Contents
+- [Features](#features)
+- [Performance Optimizations](#performance-optimizations)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Technologies Used](#technologies-used)
+- [Performance Metrics](#performance-metrics)
+- [License](#license)
+
+## Features
+
+### Todo Management
+- Create, complete, and delete tasks
+- Filter tasks by status (All, Active, Completed)
+- Reset all tasks
+- Persistent storage
+
+### Image Gallery
+- Optimized image loading with next-gen formats (AVIF, WebP)
+- Responsive image display
+- Smooth navigation controls
+- Server-side rendering compatible
+
+## Performance Optimizations
+
+### 1. Lazy Loading
+- Route-based lazy loading for all feature modules
+- Standalone components for better tree-shaking
+- Dynamic imports to reduce initial bundle size
+
+### 2. Image Optimizations
+- Modern image formats (AVIF/WebP) with appropriate fallbacks
+- Native browser lazy loading with `loading="lazy"`
+- Fetch priority optimization with `fetchpriority="high"`
+- Explicit image dimensions to prevent layout shifts
+- Conditional rendering to minimize DOM elements
+
+### 3. Caching Strategies
+- Multi-level caching system (memory → localStorage → network)
+- Service worker implementation for offline support
+- HTTP cache headers with appropriate cache control directives
+- Efficient cache invalidation strategies
+- Request deduplication for concurrent API calls
+
+## Installation
+```sh
+# Clone the repository
+git clone https://github.com/Raghad-Alahmadie/w4d1
+cd angular-todo-app
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm start
 ```
 
-## Building
+## Usage
 
-To build the project run:
-
-```bash
-ng build
+### Development Server
+```sh
+ng serve
 ```
+Navigate to [http://localhost:4200/](http://localhost:4200/) in your browser.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Building for Production
+```sh
+ng build --configuration=production
+```
+The optimized production build will be available in the `dist/` directory.
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
+### Running Tests
+```sh
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
+## Project Structure
+```
+/angular-todo-app
+│── src/
+│   ├── app/
+│   │   ├── components/
+│   │   ├── services/
+│   │   ├── models/
+│   │   ├── pages/
+│   │   ├── app.module.ts
+│   │   ├── app.component.ts
+│   ├── assets/
+│   ├── environments/
+│── angular.json
+│── package.json
+│── README.md
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Technologies Used
+- **Angular 17+**: Modern Angular with standalone components
+- **RxJS**: Reactive programming for efficient state management
+- **Angular Service Worker**: For PWA support and offline caching
+- **TypeScript**: Type-safe JavaScript superset
+- **SCSS**: Advanced styling with variables and mixins
 
-## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
