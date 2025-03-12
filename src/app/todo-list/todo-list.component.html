@@ -1,53 +1,94 @@
 <div class="todo-container">
   <form
-    style="
-      display: flex;
-      align-items: end;
-      justify-content: center;
-      padding: 5rem;
-      gap: 4px;
-    "
+    class="add-todo-form"
     [formGroup]="todoForm!"
-    (ngSubmit)="addTodo()"
+    (ngSubmit)="onSubmit()"
   >
-    <div style="display: flex; flex-direction: column; gap: 4px">
-      <label for="task-name">Task name</label>
-      <input id="task-name" formControlName="name" />
+    <div class="form-input-group">
+      <label for="task-name" class="input-label">Task name</label>
+      <input id="task-name" class="todo-input" formControlName="name" #todoInput />
     </div>
-    <button type="submit" [disabled]="todoForm!.invalid">Submit</button>
+    <button type="submit" class="submit-btn" [disabled]="todoForm!.invalid">Submit</button>
   </form>
 
-  <div class="todos-section">
-    <h3>All Tasks</h3>
-    <div *ngIf="(todos$ | async)?.length === 0" class="empty-message">
-      No tasks yet. Add a task to get started.
-    </div>
-    <ul class="todo-list">
-      <li
-        *ngFor="let todo of todos$ | async"
-        class="todo-item"
-        [ngClass]="{ completed: todo.complete }"
-      >
-        <span class="todo-name">{{ todo.name }}</span>
-        <div class="todo-actions">
-          <button
-            *ngIf="!todo.complete"
-            (click)="completeTodo(todo.id)"
-            class="complete-btn"
-          >
-            ✓
-          </button>
-          <button (click)="removeTodo(todo.id)" class="remove-btn">✕</button>
+  <!-- Handle all states with a single async pipe subscription -->
+  <ng-container *ngIf="(todos$ | async) as todos; else loadingBlock">
+    <div class="todos-section">
+      <h3>All Tasks</h3>
+      
+      <!-- Empty state - only show when truly empty -->
+      <div *ngIf="todos.length === 0" class="empty-message">
+        No tasks yet. Add a task to get started.
+      </div>
+      
+      <!-- Only show filter and list when we have tasks -->
+      <ng-container *ngIf="todos.length > 0">
+        <!-- Filter dropdown -->
+        <div class="filter-container">
+          <div class="filter-dropdown">
+            <label for="status-filter">Filter by status:</label>
+            <select 
+              id="status-filter" 
+              (change)="setFilter($any($event.target).value)"
+              class="status-select"
+            >
+              <option 
+                [value]="filterTypes.ALL" 
+                [selected]="activeFilter === filterTypes.ALL"
+              >
+                All Tasks ({{ todos.length }})
+              </option>
+              <option 
+                [value]="filterTypes.ACTIVE" 
+                [selected]="activeFilter === filterTypes.ACTIVE"
+              >
+                Active Tasks ({{ getPendingCount(todos) }})
+              </option>
+              <option 
+                [value]="filterTypes.COMPLETED" 
+                [selected]="activeFilter === filterTypes.COMPLETED"
+              >
+                Completed Tasks ({{ getCompletedCount(todos) }})
+              </option>
+            </select>
+          </div>
         </div>
-      </li>
-    </ul>
-  </div>
 
-  <button
-    (click)="resetAllTodos()"
-    class="reset-btn"
-    *ngIf="(todos$ | async)!.length > 0"
-  >
-    Reset All Tasks
-  </button>
+        <ul class="todo-list">
+          <li
+            *ngFor="let todo of filteredTodos || todos; trackBy: trackByFn"
+            class="todo-item"
+            [ngClass]="{ completed: todo.complete }"
+          >
+            <span class="todo-name">{{ todo.name }}</span>
+            <div class="todo-actions">
+              <button
+                *ngIf="!todo.complete"
+                (click)="completeTodo(todo.id)"
+                class="complete-btn"
+              >
+                ✓
+              </button>
+              <button (click)="removeTodo(todo.id)" class="remove-btn">✕</button>
+            </div>
+          </li>
+        </ul>
+        
+        <!-- Reset button - only show when we have tasks -->
+        <button
+          (click)="resetAllTodos()"
+          class="reset-btn"
+        >
+          Reset All Tasks
+        </button>
+      </ng-container>
+    </div>
+  </ng-container>
+  
+  <!-- Loading template -->
+  <ng-template #loadingBlock>
+    <div *ngIf="loading" class="loading-indicator">
+      Loading all tasks...
+    </div>
+  </ng-template>
 </div>
