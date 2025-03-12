@@ -1,0 +1,53 @@
+<div class="image-scroller">
+    <h2>Task Management Gallery</h2>
+    
+    <div class="scroller-container">
+      <!-- OPTIMIZATION 1: Fast navigation with efficient event handling -->
+      <button class="nav-btn prev" (click)="prevImage()">&lt;</button>
+      
+      <div class="image-container">
+        <!-- OPTIMIZATION 2: AVIF/WebP formats with fallbacks + conditional rendering -->
+        <ng-container *ngFor="let image of images; let i = index">
+          <picture *ngIf="i === currentIndex">
+            <!-- OPTIMIZATION: AVIF format for most modern browsers -->
+            <source 
+              [srcset]="image.avifUrl || image.url.replace('.jpg', '.avif').replace('.png', '.avif')" 
+              type="image/avif">
+            <!-- OPTIMIZATION: WebP format for older modern browsers -->
+            <source 
+              [srcset]="image.webpUrl || image.url.replace('.jpg', '.webp').replace('.png', '.webp')" 
+              type="image/webp">
+            <!-- Fallback for browsers that don't support AVIF or WebP -->
+            <img 
+              [src]="image.url" 
+              [alt]="image.alt"
+              class="gallery-image"
+              loading="lazy"
+              fetchpriority="high"
+              width="800"
+              height="500"
+              (error)="handleImageError($event)"
+            />
+          </picture>
+        </ng-container>
+        
+        <!-- OPTIMIZATION 3: Efficient DOM updates via Angular binding -->
+        <div class="image-caption">
+          <!-- OPTIMIZATION 4: Direct property access without optional chaining for faster execution -->
+          {{ images[currentIndex].caption }}
+        </div>
+      </div>
+      
+      <button class="nav-btn next" (click)="nextImage()">&gt;</button>
+    </div>
+    
+    <!-- OPTIMIZATION 5: Efficient pagination with minimal DOM elements -->
+    <div class="image-dots">
+      <span 
+        *ngFor="let dot of images; let i = index" 
+        class="dot"
+        [class.active]="i === currentIndex"
+        (click)="setImage(i)"
+      ></span>
+    </div>
+</div>
