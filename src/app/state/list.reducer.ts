@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store'
-import { addTask, completeTask, resetTasks, removeTask } from './list.actions'
+import { addTask, completeTask, resetTasks, removeTask, loadTasks } from './list.actions'
 
 export type Task = {
   id: string
@@ -11,6 +11,8 @@ export const initialState: Task[] = []
 
 export const listReducer = createReducer(
   initialState,
+  on(loadTasks, (state, { tasks }) => [...tasks]),
+  
   on(addTask, (state, { task }) => [
     ...state,
     {

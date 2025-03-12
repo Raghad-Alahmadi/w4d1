@@ -13,4 +13,8 @@ export const removeTask = createAction(
   '[List] Remove Task',
   props<{ id: string }>(),
 )
+export const loadTasks = createAction(
+  '[Task] Load Tasks',
+  props<{ tasks: Task[] }>()
+)
 export const resetTasks = createAction('[List] Reset')
